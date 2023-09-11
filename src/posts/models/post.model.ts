@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Author } from '../../authors/models/author.model';
 
 @ObjectType()
 export class Post {
@@ -7,6 +8,9 @@ export class Post {
 
   @Field()
   title: string;
+
+  @Field(type => Author)
+  author: Author;
 
   @Field(type => Int, { nullable: true })
   votes?: number;

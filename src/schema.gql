@@ -9,7 +9,21 @@ type Author {
   posts: [Post!]!
 }
 
+type Comment {
+  comment: String!
+  id: Int!
+  postId: Int!
+}
+
+type Mutation {
+  addComment(comment: String!, postId: Int!): Comment!
+  addPost(authorId: Int!, title: String!): Post!
+  upvotePost(postId: Int!): Post!
+}
+
 type Post {
+  author: Author!
+  comments: [Comment]!
   id: Int!
   title: String!
   votes: Int
@@ -17,5 +31,10 @@ type Post {
 
 type Query {
   author(id: Int!): Author!
+  comment(id: Int!): Comment!
   post(id: Int!): Post!
+}
+
+type Subscription {
+  postAdded: Post!
 }

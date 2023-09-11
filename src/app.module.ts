@@ -9,6 +9,8 @@ import { PostsModule } from './posts/posts.module';
 import { AuthorsResolver } from './authors/authors.resolver';
 import { AuthorsModule } from './authors/authors.module';
 import { PostsResolver } from './posts/posts.resolver';
+import { CommentsModule } from './comments/comments.module';
+import { CommentsResolver } from './comments/comments.resolver';
 
 
 @Module({
@@ -17,14 +19,18 @@ import { PostsResolver } from './posts/posts.resolver';
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     sortSchema: true,
     playground: false,
-    installSubscriptionHandlers: true,
+    // installSubscriptionHandlers: true,
+    subscriptions: {
+      'graphql-ws': true
+    },
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
 
   }),
     PostsModule,
     AuthorsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthorsResolver, PostsResolver],
+  providers: [AppService, AuthorsResolver, PostsResolver, CommentsResolver],
 })
 export class AppModule { }
