@@ -6,6 +6,9 @@ import { PubSub } from "graphql-subscriptions";
 import { Comment } from '../comments/models/comment.model'
 import { Author } from '../authors/models/author.model';
 import { AuthorsService } from '../authors/authors.service';
+import { Inject } from '@nestjs/common';
+import { PUB_SUB } from '../pubsub/pubsub.module';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 const pubSub = new PubSub();
 @Resolver(of => Post)
@@ -13,7 +16,8 @@ export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
     private readonly commentsService: CommentsService,
-    private readonly authorsService: AuthorsService
+    private readonly authorsService: AuthorsService,
+    @Inject(PUB_SUB) private readonly pubsub: RedisPubSub
   ) {
 
   }
@@ -45,7 +49,7 @@ export class PostsResolver {
     @Args('authorId', { type: () => Int }) authorId: number,
   ) {
     const newPost = this.postsService.addPost({ title, authorId });
-    pubSub.publish('postAdded', newPost );
+    this.pubsub.publish('postAdded', newPost );
     return newPost;
   }
 
@@ -55,7 +59,7 @@ export class PostsResolver {
     @Args('comment', { type: () => String }) comment: string,
   ) {
     const newComment = this.commentsService.addComment({ postId, comment });
-    pubSub.publish('commentAdded', { commentAdded: newComment });
+    this.pubsub.publish('commentAdded', { commentAdded: newComment });
     return newComment;
   }
 
@@ -66,6 +70,6 @@ export class PostsResolver {
     }
   })
   postAdded() {
-    return pubSub.asyncIterator('postAdded');
+    return this.pubsub.asyncIterator('postAdded');
   }
 }

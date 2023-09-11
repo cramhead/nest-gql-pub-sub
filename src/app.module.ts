@@ -11,6 +11,7 @@ import { AuthorsModule } from './authors/authors.module';
 import { PostsResolver } from './posts/posts.resolver';
 import { CommentsModule } from './comments/comments.module';
 import { CommentsResolver } from './comments/comments.resolver';
+import { PubsubModule } from './pubsub/pubsub.module';
 
 
 @Module({
@@ -29,6 +30,7 @@ import { CommentsResolver } from './comments/comments.resolver';
     PostsModule,
     AuthorsModule,
     CommentsModule,
+    PubsubModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthorsResolver, PostsResolver, CommentsResolver],
