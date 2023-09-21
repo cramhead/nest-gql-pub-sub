@@ -25,6 +25,7 @@ import { PubsubModule } from './pubsub/pubsub.module';
       'graphql-ws': true
     },
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    csrfPrevention: false
 
   }),
     PostsModule,
