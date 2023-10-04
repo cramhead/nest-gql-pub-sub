@@ -21,7 +21,7 @@ export class PostsResolver {
   ) {
 
   }
-  @Query(returns => Post)
+  @Query(returns => Post, { description: 'public: post by id' })
   async post(@Args('id', { type: () => Int }) id: number) {
     return this.postsService.findAll({ authorId: id });
   }
@@ -34,7 +34,7 @@ export class PostsResolver {
     return a;
   }
 
-  @ResolveField(returns => [Comment], { nullable: 'items' })
+  @ResolveField(returns => [Comment], { nullable: 'items', description: 'Public: Comments' })
   async comments(@Parent() post: Post) {
     const { id } = post;
     return this.commentsService.findAll(id)
@@ -43,17 +43,17 @@ export class PostsResolver {
   async upvotePost(@Args({ name: 'postId', type: () => Int }) postId: number) {
     return this.postsService.upvoteById({ id: postId });
   }
-  @Mutation(returns => Post)
+  @Mutation(returns => Post, { description: "private: Add Post" })
   async addPost(
     @Args('title', { type: () => String }) title: string,
     @Args('authorId', { type: () => Int }) authorId: number,
   ) {
     const newPost = this.postsService.addPost({ title, authorId });
-    this.pubsub.publish('postAdded', newPost );
+    this.pubsub.publish('postAdded', newPost);
     return newPost;
   }
 
-  @Mutation(returns => Comment)
+  @Mutation(returns => Comment, { description: 'private: Add comments' })
   async addComment(
     @Args('postId', { type: () => Int }) postId: number,
     @Args('comment', { type: () => String }) comment: string,
@@ -64,6 +64,7 @@ export class PostsResolver {
   }
 
   @Subscription(returns => Post, {
+    description: "private: Post added",
     resolve(this: PostsResolver, value) {
       console.log(`postAdded subscription`, value)
       return value;

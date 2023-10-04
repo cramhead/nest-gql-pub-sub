@@ -21,5 +21,6 @@ async function bootstrap() {
 }));
 
   await app.listen(4003);
+  console.log(`listening on 4003`)
 }
 bootstrap();

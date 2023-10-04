@@ -16,13 +16,18 @@ type Comment {
 }
 
 type Mutation {
+  """private: Add comments"""
   addComment(comment: String!, postId: Int!): Comment!
+
+  """private: Add Post"""
   addPost(authorId: Int!, title: String!): Post!
   upvotePost(postId: Int!): Post!
 }
 
 type Post {
   author: Author!
+
+  """Public: Comments"""
   comments: [Comment]!
   id: Int!
   title: String!
@@ -31,10 +36,15 @@ type Post {
 
 type Query {
   author(id: Int!): Author!
+
+  """public: comment api"""
   comment(id: Int!): Comment!
+
+  """public: post by id"""
   post(id: Int!): Post!
 }
 
 type Subscription {
+  """private: Post added"""
   postAdded: Post!
 }
