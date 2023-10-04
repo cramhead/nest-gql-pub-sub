@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  nestgqlpubsub:
+    image: nestgqlpubsub
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 4003:4003
+      - 9229:9229
+    command: ["node", "--inspect=0.0.0.0:9229", "index.js"]
+
+  redis:
+    image: redis:6.0.9
+    platform: linux/amd64
+    container_name: redis
+    restart: unless-stopped
+    # This entry point allows ioredis running directly on your workstation to connect to
+    # the docker-compose redis instance `localhost:6379`
+    # See: https://github.com/luin/ioredis/issues/763
+    entrypoint:
+      [
+        "redis-server",
+        "/usr/local/etc/redis/redis.conf",
+        "--bind",
+        "redis",
+        "--port",
+        "6379",
+      ]
+    ports:
+      - 6379:6379
+    networks:
+      - app-network
+    volumes:
+      - ./redis:/usr/local/etc/redis
